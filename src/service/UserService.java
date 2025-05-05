@@ -1,7 +1,10 @@
 package service;
 
+import java.util.Map;
+
 import entity.Admin;
 import entity.RegularUser;
+import entity.Resource;
 import entity.ResourceManager;
 import entity.User;
 import repository.UserRepository;
@@ -14,7 +17,9 @@ public class UserService {
 		this.userRepository = userRepository;
 		this.validator = validator;
 	}
-
+	public Map<String, User> getAllUser() {
+		return userRepository.findAll();
+	}
 	public void registerUser(String id, String username, String password, String role) {
 		if (!validator.validateUsername(username)) {
 			throw new IllegalArgumentException("Invalid username format");

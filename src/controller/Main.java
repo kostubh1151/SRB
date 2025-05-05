@@ -11,20 +11,21 @@ import service.ResourceService;
 import service.UserService;
 
 public class Main {
-public static void main(String[] args) {
-UserRepository userRepository = new UserRepository();
-ResourceRepository resourceRepository = new ResourceRepository();
-BookingRepository bookingRepository = new BookingRepository();
+	public static void main(String[] args) {
+		UserRepository userRepository = new UserRepository();
+		ResourceRepository resourceRepository = new ResourceRepository();
+		BookingRepository bookingRepository = new BookingRepository();
 
-InputValidator validator = new InputValidator();
-Calculator calculator = new Calculator();
-UserService userService = new UserService(userRepository, validator);
-ResourceService resourceService = new ResourceService(resourceRepository, validator);
-BookingService bookingService = new BookingService(bookingRepository, calculator, validator);
-ReportService reportService = new ReportService(bookingRepository);
-DataReader dataReader = new DataReader(resourceService);
+		InputValidator validator = new InputValidator();
+		Calculator calculator = new Calculator();
+		UserService userService = new UserService(userRepository, validator);
+		ResourceService resourceService = new ResourceService(resourceRepository, validator);
+		BookingService bookingService = new BookingService(bookingRepository, calculator, validator);
+		ReportService reportService = new ReportService(bookingRepository);
+		DataReader dataReader = new DataReader(resourceService,userService);
 
-ConsoleUI consoleUI = new ConsoleUI(userService, resourceService, bookingService, reportService, validator, dataReader);
-consoleUI.start();
-}
+		ConsoleUI consoleUI = new ConsoleUI(userService, resourceService, bookingService, reportService, validator,
+				dataReader);
+		consoleUI.start();
+	}
 }
