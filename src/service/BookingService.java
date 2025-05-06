@@ -9,7 +9,7 @@ import entity.User;
 import repository.BookingRepository;
 
 public class BookingService {
-	private BookingRepository bookingRepository;
+	public BookingRepository bookingRepository;
 	private Calculator calculator;
 	private InputValidator validator;
 

@@ -1,6 +1,7 @@
 package controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import entity.Cart;
 import entity.Resource;
 import entity.ResourceSelection;
 import entity.User;
+import repository.BookingRepository;
 import service.BookingService;
 import service.InputValidator;
 import service.ReportService;
@@ -207,8 +209,9 @@ public class ConsoleUI {
 			System.out.println("1. Browse Resources");
 			System.out.println("2. Add to Cart");
 			System.out.println("3. Confirm Booking");
-			System.out.println("4. Cancel Booking");
-			System.out.println("5. Logout");
+			System.out.println("4. see All Bookings");
+			System.out.println("5. Cancel Booking");
+			System.out.println("6. Logout");
 			System.out.print("Choose an option: ");
 			try {
 				int choice = scanner.nextInt();
@@ -224,9 +227,12 @@ public class ConsoleUI {
 					confirmBooking();
 					break;
 				case 4:
-					cancelBooking();
+					printBooking();
 					break;
 				case 5:
+					cancelBooking();
+					break;
+				case 6:
 					currentUser = null;
 					cart.clear();
 					System.out.println("Logged out successfully!");
@@ -343,6 +349,7 @@ public class ConsoleUI {
 			System.out.println("Resource added to cart!");
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
+			
 		}
 	}
 
@@ -356,6 +363,7 @@ public class ConsoleUI {
 			try {
 				Booking booking = bookingService.createBooking(UUID.randomUUID().toString(), currentUser,
 						selection.getResource(), selection.getStartTime(), selection.getEndTime());
+//				printBooking();
 				if (booking != null) {
 					System.out.println("Booking confirmed for " + selection.getResource().getName() + ", Cost: "
 							+ booking.getCost());
@@ -369,7 +377,34 @@ public class ConsoleUI {
 		}
 		cart.clear();
 	}
+	
+//	private void printBooking() {
+//		System.out.println("bookings");
+//		List<Booking> bookings=bookingService.bookingRepository.findAll();
+//		for(Booking b:bookings)
+//		{
+//			System.out.println(b);
+//		}
+//	}
+	private void printBooking() {
+	    System.out.println("Bookings:");
 
+	   
+	    if (bookingService == null || bookingService.bookingRepository == null) {
+	        System.out.println("Booking service or repository is not initialized.");
+	        return;
+	    }
+
+	    List<Booking> bookings = bookingService.bookingRepository.findAll();
+
+	    
+	    if (bookings.isEmpty()) {
+	        System.out.println("No bookings found.");
+	    } else {
+	        bookings.forEach(System.out::println);
+	    }
+	}
+	
 	private void cancelBooking() {
 		System.out.print("Enter booking ID: ");
 		String bookingId = scanner.nextLine();
