@@ -2,6 +2,7 @@ package controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class ConsoleUI {
 	private CartRepository cartRepo;
 
 	public ConsoleUI(UserService userService, ResourceService resourceService, BookingService bookingService,
-			ReportService reportService, InputValidator validator, DataReader dataReader,CartRepository cart) {
+			ReportService reportService, InputValidator validator, DataReader dataReader, CartRepository cart) {
 		this.userService = userService;
 		this.resourceService = resourceService;
 		this.bookingService = bookingService;
@@ -40,8 +41,8 @@ public class ConsoleUI {
 		this.dataReader = dataReader;
 		this.scanner = new Scanner(System.in);
 		this.cart = new Cart();
-		this.cartRepo=cart;
-		
+		this.cartRepo = cart;
+
 	}
 
 	public void start() {
@@ -95,10 +96,9 @@ public class ConsoleUI {
 				System.out.println("Invalid credentials!");
 			} else {
 				System.out.println("Login successful! Welcome, " + currentUser.getUsername());
-				cart=cartRepo.getCartofParticularUser(currentUser);
-				if(cart==null)
-				{
-					cart=new Cart();
+				cart = cartRepo.getCartofParticularUser(currentUser);
+				if (cart == null) {
+					cart = new Cart();
 				}
 			}
 		} catch (Exception e) {
@@ -365,10 +365,10 @@ public class ConsoleUI {
 				System.out.println("Invalid date/time range! Start time must be in the future and before end time.");
 				return;
 			}
-			
+
 			cart.addSelection(new ResourceSelection(resource, startTime, endTime));
 			cartRepo.addCartRepository(currentUser, cart);
-			
+
 			System.out.println("Resource added to cart!");
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
@@ -424,6 +424,17 @@ public class ConsoleUI {
 				.anyMatch(selection -> selection.getResource().getId().equals(resource.getId()));
 	}
 
+	private boolean checkResourceAvail(ResourceSelection selection) {
+
+		Map<String, Resource> map = resourceService.getAllResources();
+
+		if (map.get(selection.getResource().getId()) != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private void confirmBooking() {
 		if (cart.getSelections().isEmpty()) {
 			System.out.println("Cart is empty!");
@@ -432,19 +443,27 @@ public class ConsoleUI {
 		System.out.println("\n=== Confirm Bookings ===");
 		for (ResourceSelection selection : cart.getSelections()) {
 //			if(resourceService.getResource(cart.))
-			try {
-				Booking booking = bookingService.createBooking(UUID.randomUUID().toString(), currentUser,
-						selection.getResource(), selection.getStartTime(), selection.getEndTime());
+
+			if (checkResourceAvail(selection)) {
+
+				try {
+					Booking booking = bookingService.createBooking(UUID.randomUUID().toString(), currentUser,
+							selection.getResource(), selection.getStartTime(), selection.getEndTime());
 //				printBooking();
-				if (booking != null) {
-					System.out.println("Booking confirmed for " + selection.getResource().getName() + ", Cost: "
-							+ booking.getCost());
-				} else {
-					System.out.println(
-							"Booking failed for " + selection.getResource().getName() + " due to time conflict!");
+					if (booking != null) {
+						System.out.println("Booking confirmed for " + selection.getResource().getName() + ", Cost: "
+								+ booking.getCost());
+					} else {
+						System.out.println(
+								"Booking failed for " + selection.getResource().getName() + " due to time conflict!");
+					}
+				} catch (IllegalArgumentException e) {
+					System.out.println("Error: " + e.getMessage());
 				}
-			} catch (IllegalArgumentException e) {
-				System.out.println("Error: " + e.getMessage());
+			}
+			else
+			{
+				System.out.println(selection.getResource().getName()+" may not be available");
 			}
 		}
 		cart.clear();
