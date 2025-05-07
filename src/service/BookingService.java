@@ -41,12 +41,21 @@ public class BookingService {
 		return null;
 	}
 
-	public void cancelBooking(String bookingId) {
+	public void cancelBooking(String bookingId,User user) {
 		Booking booking = bookingRepository.findById(bookingId);
 		if (booking == null) {
 			throw new IllegalArgumentException("Booking not found");
 		}
-		booking.getResource().setAvailable(true);
-		bookingRepository.delete(bookingId);
+		if(booking.getUser().equals(user))
+		{
+			System.out.println(booking.getUser().getUsername());
+			System.out.println(user.getUsername());
+			booking.getResource().setAvailable(true);
+			bookingRepository.delete(bookingId);
+			System.out.println("Booking cancelled successfully!");
+			return;
+		}
+		System.out.println("You don't have Bookings to delete");
+	
 	}
 }

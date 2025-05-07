@@ -19,8 +19,11 @@ public class InputValidator {
 	}
 
 	public boolean validateResource(Resource resource) {
-		return resource != null && resource.getName() != null && !resource.getName().isEmpty()
-				&& resource.getType() != null && !resource.getType().isEmpty() && resource.getCostPerHour() > 0;
+
+		return resource != null && resource.getName() != null && !resource.getName().trim().isEmpty()
+				&& resource.getName().matches("^(?=.*[a-zA-Z])[a-zA-Z0-9 ]{3,50}$") && resource.getType() != null
+				&& !resource.getType().isEmpty() && resource.getType().matches("^(?=.*[a-zA-Z])[a-zA-Z0-9 ]{3,50}$")
+				&& resource.getCostPerHour() > 0;
 	}
 
 	public boolean validateDateTimeRange(LocalDateTime startTime, LocalDateTime endTime) {

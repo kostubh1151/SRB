@@ -103,19 +103,18 @@ public class ConsoleUI {
 		System.out.print("Enter password (at least 6 characters): ");
 		String password = scanner.nextLine();
 		String role;
-		if(currentUser!=null && currentUser.getRole().equals("ADMIN")) {
+		if (currentUser != null && currentUser.getRole().equals("ADMIN")) {
 			System.out.print("Enter role (ADMIN, RESOURCE_MANAGER, REGULAR_USER): ");
 			role = scanner.nextLine();
-		}
-		else {
+		} else {
 			System.out.print("Enter role (ADMIN, RESOURCE_MANAGER): ");
 			role = scanner.nextLine();
-			while(role.toLowerCase().equals("regular_user")) {
+			while (role.toLowerCase().equals("regular_user")) {
 				System.out.print("Invalid Role. Enter correct role:");
-				role = scanner.nextLine();	
+				role = scanner.nextLine();
 			}
 		}
-		
+
 		try {
 			userService.registerUser(UUID.randomUUID().toString(), username, password, role);
 			System.out.println("User registered successfully!");
@@ -227,7 +226,7 @@ public class ConsoleUI {
 					confirmBooking();
 					break;
 				case 4:
-					printBooking();
+					viewReports();
 					break;
 				case 5:
 					cancelBooking();
@@ -349,7 +348,7 @@ public class ConsoleUI {
 			System.out.println("Resource added to cart!");
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
-			
+
 		}
 	}
 
@@ -377,56 +376,30 @@ public class ConsoleUI {
 		}
 		cart.clear();
 	}
-	
-//	private void printBooking() {
-//		System.out.println("bookings");
-//		List<Booking> bookings=bookingService.bookingRepository.findAll();
-//		for(Booking b:bookings)
-//		{
-//			System.out.println(b);
-//		}
-//	}
-	private void printBooking() {
-	    System.out.println("Bookings:");
 
-	   
-	    if (bookingService == null || bookingService.bookingRepository == null) {
-	        System.out.println("Booking service or repository is not initialized.");
-	        return;
-	    }
-
-	    List<Booking> bookings = bookingService.bookingRepository.findAll();
-
-	    
-	    if (bookings.isEmpty()) {
-	        System.out.println("No bookings found.");
-	    } else {
-	        bookings.forEach(System.out::println);
-	    }
-	}
-	
 	private void cancelBooking() {
 		System.out.print("Enter booking ID: ");
 		String bookingId = scanner.nextLine();
 		try {
-			bookingService.cancelBooking(bookingId);
-			System.out.println("Booking cancelled successfully!");
+			bookingService.cancelBooking(bookingId,currentUser);
+			
 		} catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 	}
 
 	private void viewReports() {
-		System.out.println("\n=== Booking Trends ===");
-		reportService.getBookingTrends()
-				.forEach((resource, count) -> System.out.println("Resource: " + resource + ", Bookings: " + count));
-
-		System.out.println("\n=== Your Booking History ===");
-		reportService.getUserBookingHistory(currentUser.getId())
-				.forEach(booking -> System.out.println("Booking ID: " + booking.getId() + ", Resource: "
-						+ booking.getResource().getName() + ", Start: " + booking.getStartTime() + ", End: "
-						+ booking.getEndTime() + ", Cost: " + booking.getCost()));
+		if (currentUser.getRole() == "ADMIN") {
+			System.out.println("\n=== Booking Trends ===");
+			reportService.getBookingTrends()
+					.forEach((resource, count) -> System.out.println("Resource: " + resource + ", Bookings: " + count));
+		} else {
+			System.out.println("\n=== Your Booking History ===");
+			reportService.getUserBookingHistory(currentUser.getId())
+					.forEach(booking -> System.out.println("Booking ID: " + booking.getId() + ", Resource: "
+							+ booking.getResource().getName() + ", Start: " + booking.getStartTime() + ", End: "
+							+ booking.getEndTime() + ", Cost: " + booking.getCost()));
+		}
 	}
 
-	
 }

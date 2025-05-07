@@ -31,15 +31,16 @@ public class ResourceService {
 
 	public void updateResource(String id, String name, String type, double costPerHour) {
 		Resource resource = resourceRepository.findById(id);
+
 		if (resource == null) {
 			throw new IllegalArgumentException("Resource not found");
+		}
+		if (!validator.validateResource(new Resource(id, name, type, costPerHour))) {
+			throw new IllegalArgumentException("Invalid resource data");
 		}
 		resource.setName(name);
 		resource.setType(type);
 		resource.setCostPerHour(costPerHour);
-		if (!validator.validateResource(resource)) {
-			throw new IllegalArgumentException("Invalid resource data");
-		}
 		resourceRepository.save(resource);
 	}
 

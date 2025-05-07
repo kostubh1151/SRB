@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import entity.Booking;
 import repository.BookingRepository;
-
+ 
 public class ReportService {
 	private BookingRepository bookingRepository;
 
