@@ -1,3 +1,4 @@
 /controller/
-/service/
 /entity/
+/repository/
+/service/

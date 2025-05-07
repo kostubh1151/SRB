@@ -11,6 +11,7 @@ import entity.Resource;
 import entity.ResourceSelection;
 import entity.User;
 import repository.BookingRepository;
+import repository.CartRepository;
 import service.BookingService;
 import service.InputValidator;
 import service.ReportService;
@@ -27,9 +28,10 @@ public class ConsoleUI {
 	private Scanner scanner;
 	private User currentUser;
 	private Cart cart;
+	private CartRepository cartRepo;
 
 	public ConsoleUI(UserService userService, ResourceService resourceService, BookingService bookingService,
-			ReportService reportService, InputValidator validator, DataReader dataReader) {
+			ReportService reportService, InputValidator validator, DataReader dataReader,CartRepository cart) {
 		this.userService = userService;
 		this.resourceService = resourceService;
 		this.bookingService = bookingService;
@@ -38,6 +40,8 @@ public class ConsoleUI {
 		this.dataReader = dataReader;
 		this.scanner = new Scanner(System.in);
 		this.cart = new Cart();
+		this.cartRepo=cart;
+		
 	}
 
 	public void start() {
@@ -91,6 +95,11 @@ public class ConsoleUI {
 				System.out.println("Invalid credentials!");
 			} else {
 				System.out.println("Login successful! Welcome, " + currentUser.getUsername());
+				cart=cartRepo.getCartofParticularUser(currentUser);
+				if(cart==null)
+				{
+					cart=new Cart();
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
@@ -210,7 +219,10 @@ public class ConsoleUI {
 			System.out.println("3. Confirm Booking");
 			System.out.println("4. see All Bookings");
 			System.out.println("5. Cancel Booking");
-			System.out.println("6. Logout");
+			System.out.println("6. view cart");
+			System.out.println("7. remove from cart");
+			System.out.println("8. clear cart");
+			System.out.println("9. logout");
 			System.out.print("Choose an option: ");
 			try {
 				int choice = scanner.nextInt();
@@ -232,8 +244,17 @@ public class ConsoleUI {
 					cancelBooking();
 					break;
 				case 6:
-					currentUser = null;
+					viewCart();
+					break;
+				case 7:
+					removeFromCart();
+					break;
+				case 8:
 					cart.clear();
+					break;
+				case 9:
+					currentUser = null;
+//					cart.clear();
 					System.out.println("Logged out successfully!");
 					break;
 				default:
@@ -344,12 +365,63 @@ public class ConsoleUI {
 				System.out.println("Invalid date/time range! Start time must be in the future and before end time.");
 				return;
 			}
+			
 			cart.addSelection(new ResourceSelection(resource, startTime, endTime));
+			cartRepo.addCartRepository(currentUser, cart);
+			
 			System.out.println("Resource added to cart!");
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 
 		}
+	}
+
+	private void removeFromCart() {
+		if (currentUser == null) {
+			System.out.println("Please log in to remove items from your cart.");
+			return;
+		}
+
+		System.out.print("Enter the name of the resource to remove: ");
+		String resourceName = scanner.nextLine();
+
+		ResourceSelection toRemove = null;
+		for (ResourceSelection selection : cart.getSelections()) {
+			if (selection.getResource().getName().equalsIgnoreCase(resourceName)) {
+				toRemove = selection;
+				break;
+			}
+		}
+
+		if (toRemove != null) {
+			cart.getSelections().remove(toRemove);
+			System.out.println(resourceName + " has been removed from your cart.");
+		} else {
+			System.out.println("Resource not found in your cart.");
+		}
+	}
+
+	private void viewCart() {
+		if (currentUser == null) {
+			System.out.println("Please log in to view your cart.");
+			return;
+		}
+
+		List<ResourceSelection> selections = cart.getSelections();
+		if (selections.isEmpty()) {
+			System.out.println("Your cart is empty.");
+		} else {
+			System.out.println("Items in your cart:");
+			for (ResourceSelection selection : selections) {
+				System.out.println("Resource: " + selection.getResource().getName() + ", Start Time: "
+						+ selection.getStartTime() + ", End Time: " + selection.getEndTime());
+			}
+		}
+	}
+
+	private boolean isResourceInCart(Resource resource) {
+		return cart.getSelections().stream()
+				.anyMatch(selection -> selection.getResource().getId().equals(resource.getId()));
 	}
 
 	private void confirmBooking() {
@@ -359,6 +431,7 @@ public class ConsoleUI {
 		}
 		System.out.println("\n=== Confirm Bookings ===");
 		for (ResourceSelection selection : cart.getSelections()) {
+//			if(resourceService.getResource(cart.))
 			try {
 				Booking booking = bookingService.createBooking(UUID.randomUUID().toString(), currentUser,
 						selection.getResource(), selection.getStartTime(), selection.getEndTime());
@@ -381,8 +454,8 @@ public class ConsoleUI {
 		System.out.print("Enter booking ID: ");
 		String bookingId = scanner.nextLine();
 		try {
-			bookingService.cancelBooking(bookingId,currentUser);
-			
+			bookingService.cancelBooking(bookingId, currentUser);
+
 		} catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
 		}

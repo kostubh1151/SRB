@@ -51,6 +51,8 @@ public class UserService {
 	public User login(String username, String password) {
 		User user = userRepository.findByUsername(username);
 		if (user != null && user.authenticate(password)) {
+			
+			
 			return user;
 		}
 		return null;
