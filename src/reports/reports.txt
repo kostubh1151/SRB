@@ -1,0 +1,1 @@
+Booking [id=531ace12-00f4-4dfe-825e-216fd34a8901, user=user, resource=Stage Equipments, startTime=2025-05-08T12:30, endTime=2025-05-08T14:30, cost=140.0]

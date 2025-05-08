@@ -151,7 +151,8 @@ public class ConsoleUI {
 			System.out.println("3. Remove User");
 			System.out.println("4. View User");
 			System.out.println("5. View Reports");
-			System.out.println("6. Log Out");
+			System.out.println("6. generate Report of Bookings");
+			System.out.println("7. Log Out");
 
 			try {
 				int choice = scanner.nextInt();
@@ -173,10 +174,14 @@ public class ConsoleUI {
 					viewReports();
 					break;
 				case 6:
+					generateReport();
+					break;
+				case 7:
 					currentUser = null;
 					cart.clear();
 					System.out.println("Logged out successfully!");
 					break;
+				
 				default:
 					System.out.println("Invalid option");
 				}
@@ -279,6 +284,12 @@ public class ConsoleUI {
 				scanner.nextLine();
 			}
 		}
+	}
+	
+	private void generateReport() {
+		String filePath="D:\\SRBMS\\SRB\\src\\reports\\reports.txt";
+		reportService.writeListToFile(bookingService.bookingRepository.findAll(), filePath);
+		
 	}
 
 	private void viewUser() {
