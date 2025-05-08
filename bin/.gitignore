@@ -1,3 +1,5 @@
 /controller/
-/service/
 /entity/
+/module-info.class
+/repository/
+/service/
