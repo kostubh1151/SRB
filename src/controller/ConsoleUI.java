@@ -132,15 +132,26 @@ public class ConsoleUI {
 		}
 	}
 
+	public void removeUser() {
+		System.out.print("Enter the name of the user you want to remove:  ");
+		String username = scanner.nextLine();
+		if (bookingService.bookingRepository.findAll().isEmpty()) {
+			userService.removeUser(username);
+		} else {
+			System.out.println("User has some bookings and cannot be removed.");
+		}
+	}
+
 	private void showMainMenu() {
 		if (currentUser.getRole().equals("ADMIN")) {
 			System.out.println("\n=== SRBMS Main Menu ===");
 			System.out.println("Role: " + currentUser.getRole());
 			System.out.println("1. Browse Resource");
 			System.out.println("2. Add User");
-			System.out.println("3. View User");
-			System.out.println("4. View Reports");
-			System.out.println("5. Log Out");
+			System.out.println("3. Remove User");
+			System.out.println("4. View User");
+			System.out.println("5. View Reports");
+			System.out.println("6. Log Out");
 
 			try {
 				int choice = scanner.nextInt();
@@ -153,12 +164,15 @@ public class ConsoleUI {
 					handleRegister();
 					break;
 				case 3:
-					viewUser();
+					removeUser();
 					break;
 				case 4:
-					viewReports();
+					viewUser();
 					break;
 				case 5:
+					viewReports();
+					break;
+				case 6:
 					currentUser = null;
 					cart.clear();
 					System.out.println("Logged out successfully!");
@@ -382,12 +396,12 @@ public class ConsoleUI {
 			return;
 		}
 
-		System.out.print("Enter the name of the resource to remove: ");
-		String resourceName = scanner.nextLine();
+		System.out.print("Enter the Id of the resource to remove: ");
+		String id = scanner.nextLine();
 
 		ResourceSelection toRemove = null;
 		for (ResourceSelection selection : cart.getSelections()) {
-			if (selection.getResource().getName().equalsIgnoreCase(resourceName)) {
+			if (selection.getResource().getId().equalsIgnoreCase(id)) {
 				toRemove = selection;
 				break;
 			}
@@ -395,7 +409,7 @@ public class ConsoleUI {
 
 		if (toRemove != null) {
 			cart.getSelections().remove(toRemove);
-			System.out.println(resourceName + " has been removed from your cart.");
+			System.out.println(id + " has been removed from your cart.");
 		} else {
 			System.out.println("Resource not found in your cart.");
 		}
@@ -419,11 +433,6 @@ public class ConsoleUI {
 		}
 	}
 
-	private boolean isResourceInCart(Resource resource) {
-		return cart.getSelections().stream()
-				.anyMatch(selection -> selection.getResource().getId().equals(resource.getId()));
-	}
-
 	private boolean checkResourceAvail(ResourceSelection selection) {
 
 		Map<String, Resource> map = resourceService.getAllResources();
@@ -442,14 +451,13 @@ public class ConsoleUI {
 		}
 		System.out.println("\n=== Confirm Bookings ===");
 		for (ResourceSelection selection : cart.getSelections()) {
-//			if(resourceService.getResource(cart.))
 
 			if (checkResourceAvail(selection)) {
 
 				try {
 					Booking booking = bookingService.createBooking(UUID.randomUUID().toString(), currentUser,
 							selection.getResource(), selection.getStartTime(), selection.getEndTime());
-//				printBooking();
+
 					if (booking != null) {
 						System.out.println("Booking confirmed for " + selection.getResource().getName() + ", Cost: "
 								+ booking.getCost());
@@ -460,10 +468,8 @@ public class ConsoleUI {
 				} catch (IllegalArgumentException e) {
 					System.out.println("Error: " + e.getMessage());
 				}
-			}
-			else
-			{
-				System.out.println(selection.getResource().getName()+" may not be available");
+			} else {
+				System.out.println(selection.getResource().getName() + " may not be available");
 			}
 		}
 		cart.clear();

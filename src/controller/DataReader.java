@@ -26,7 +26,7 @@ userService.registerUser("12", "user", "user123", "regular_user");
 userService.registerUser("11", "Tinu", "Tinu123", "regular_user");
 userService.registerUser("19", "Kostubh", "Kostu123", "regular_user");
 userService.registerUser("9", "admin", "admin123", "admin");
-userService.registerUser("5", "resource", "resource", "resource_manager");
+userService.registerUser("5", "resource", "resource123", "resource_manager");
 
 }
 }

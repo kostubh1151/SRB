@@ -17,9 +17,11 @@ public class UserService {
 		this.userRepository = userRepository;
 		this.validator = validator;
 	}
+
 	public Map<String, User> getAllUser() {
 		return userRepository.findAll();
 	}
+
 	public void registerUser(String id, String username, String password, String role) {
 		if (!validator.validateUsername(username)) {
 			throw new IllegalArgumentException("Invalid username format");
@@ -48,11 +50,19 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	public void removeUser(String username) {
+		User user = userRepository.findByUsername(username);
+		if (user != null) {
+			userRepository.deleteByUsername(username);
+		} else {
+			throw new IllegalArgumentException("User not found: " + username);
+		}
+	}
+
 	public User login(String username, String password) {
 		User user = userRepository.findByUsername(username);
 		if (user != null && user.authenticate(password)) {
-			
-			
+
 			return user;
 		}
 		return null;
