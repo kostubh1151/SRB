@@ -1,7 +1,0 @@
-Resource{id='R2', name='Projector', type='Equipment', costPerHour=20.0, isAvailable=true}
-Resource{id='R3', name='Java Book', type='Book', costPerHour=10.0, isAvailable=true}
-Resource{id='R4', name='SpringBoot', type='Book', costPerHour=30.0, isAvailable=true}
-Resource{id='R5', name='HD Conference Microphone', type='Microphone', costPerHour=330.0, isAvailable=true}
-Resource{id='R6', name='Interactive Whiteboard', type='Board', costPerHour=310.0, isAvailable=true}
-Resource{id='R7', name='Python Mastery Book', type='Book', costPerHour=80.0, isAvailable=true}
-Resource{id='R1', name='Stage Equipments', type='Electronics', costPerHour=70.0, isAvailable=true}

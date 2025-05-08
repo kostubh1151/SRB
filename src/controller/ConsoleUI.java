@@ -66,18 +66,28 @@ public class ConsoleUI {
 			int choice = scanner.nextInt();
 			scanner.nextLine();
 			switch (choice) {
-				case 1:
-					handleLogin();
-					break;
-				case 2:
-					handleRegister();
-					break;
-				case 3:
-					System.out.println("Exiting...");
-					System.exit(0);
-					break;
-				default:
-					System.out.println("Invalid option!");
+			case 1:
+				handleLogin();
+				break;
+			case 2:
+				System.out.println("please login with admin role");
+				handleLogin();
+				if(currentUser.getRole().equals("ADMIN"))
+				{
+					
+				handleRegister();
+				}
+				else
+				{
+					System.out.println("please login with admin role");
+				}
+				break;
+			case 3:
+				System.out.println("Exiting...");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid option!");
 			}
 		} catch (Exception e) {
 			System.out.println("Invalid input! Please enter a number.");
@@ -159,35 +169,35 @@ public class ConsoleUI {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-					case 1:
-						browseResources();
-						break;
-					case 2:
-						handleRegister();
-						break;
-					case 3:
-						removeUser();
-						break;
-					case 4:
-						viewUser();
-						break;
-					case 5:
-						viewReports();
-						break;
-					case 6:
-						generateReport();
-						break;
-					case 7:
-						generateReportForResources();
-						break;
-					case 8:
-						currentUser = null;
-						cart.clear();
-						System.out.println("Logged out successfully!");
-						break;
+				case 1:
+					browseResources();
+					break;
+				case 2:
+					handleRegister();
+					break;
+				case 3:
+					removeUser();
+					break;
+				case 4:
+					viewUser();
+					break;
+				case 5:
+					viewReports();
+					break;
+				case 6:
+					generateReport();
+					break;
+				case 7:
+					generateReportForResources();
+					break;
+				case 8:
+					currentUser = null;
+					cart.clear();
+					System.out.println("Logged out successfully!");
+					break;
 
-					default:
-						System.out.println("Invalid option");
+				default:
+					System.out.println("Invalid option");
 				}
 
 			} catch (Exception e) {
@@ -208,25 +218,25 @@ public class ConsoleUI {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-					case 1:
-						addResource();
-						break;
-					case 2:
-						updateResource();
-						break;
-					case 3:
-						deleteResource();
-						break;
-					case 4:
-						browseResources();
-						break;
-					case 5:
-						currentUser = null;
-						cart.clear();
-						System.out.println("Logged out successfully!");
-						break;
-					default:
-						System.out.println("Invalid option");
+				case 1:
+					addResource();
+					break;
+				case 2:
+					updateResource();
+					break;
+				case 3:
+					deleteResource();
+					break;
+				case 4:
+					browseResources();
+					break;
+				case 5:
+					currentUser = null;
+					cart.clear();
+					System.out.println("Logged out successfully!");
+					break;
+				default:
+					System.out.println("Invalid option");
 				}
 
 			} catch (Exception e) {
@@ -251,37 +261,37 @@ public class ConsoleUI {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-					case 1:
-						browseResources();
-						break;
-					case 2:
-						addToCart();
-						break;
-					case 3:
-						confirmBooking();
-						break;
-					case 4:
-						viewReports();
-						break;
-					case 5:
-						cancelBooking();
-						break;
-					case 6:
-						viewCart();
-						break;
-					case 7:
-						removeFromCart();
-						break;
-					case 8:
-						cart.clear();
-						break;
-					case 9:
-						currentUser = null;
-						// cart.clear();
-						System.out.println("Logged out successfully!");
-						break;
-					default:
-						System.out.println("Invalid option!");
+				case 1:
+					browseResources();
+					break;
+				case 2:
+					addToCart();
+					break;
+				case 3:
+					confirmBooking();
+					break;
+				case 4:
+					viewReports();
+					break;
+				case 5:
+					cancelBooking();
+					break;
+				case 6:
+					viewCart();
+					break;
+				case 7:
+					removeFromCart();
+					break;
+				case 8:
+					cart.clear();
+					break;
+				case 9:
+					currentUser = null;
+					// cart.clear();
+					System.out.println("Logged out successfully!");
+					break;
+				default:
+					System.out.println("Invalid option!");
 				}
 			} catch (Exception e) {
 				System.out.println("Invalid input! Please enter a number.");
