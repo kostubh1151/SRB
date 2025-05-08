@@ -1,6 +1,7 @@
 package controller;
 
 import repository.BookingRepository;
+import repository.CartRepository;
 import repository.ResourceRepository;
 import repository.UserRepository;
 import service.BookingService;
@@ -15,6 +16,7 @@ public class Main {
 		UserRepository userRepository = new UserRepository();
 		ResourceRepository resourceRepository = new ResourceRepository();
 		BookingRepository bookingRepository = new BookingRepository();
+		CartRepository cartRepository=new CartRepository();
 
 		InputValidator validator = new InputValidator();
 		Calculator calculator = new Calculator();
@@ -25,7 +27,7 @@ public class Main {
 		DataReader dataReader = new DataReader(resourceService,userService);
 
 		ConsoleUI consoleUI = new ConsoleUI(userService, resourceService, bookingService, reportService, validator,
-				dataReader);
+				dataReader,cartRepository);
 		consoleUI.start();
 	}
 }
