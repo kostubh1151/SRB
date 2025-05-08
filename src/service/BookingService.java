@@ -48,8 +48,8 @@ public class BookingService {
 		}
 		if(booking.getUser().equals(user))
 		{
-			System.out.println(booking.getUser().getUsername());
-			System.out.println(user.getUsername());
+//			System.out.println(booking.getUser().getUsername());
+//			System.out.println(user.getUsername());
 			booking.getResource().setAvailable(true);
 			bookingRepository.delete(bookingId);
 			System.out.println("Booking cancelled successfully!");
