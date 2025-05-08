@@ -24,9 +24,9 @@ public class ReportService {
 	public List<Booking> getUserBookingHistory(String userId) {
 		return bookingRepository.findByUserId(userId);
 	}
-	public void writeListToFile(List<Booking> list, String filePath) {
+	public <T> void writeListToFile(List<T> list, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (Booking line : list) {
+            for (T line : list) {
                 writer.write(line.toString());
                 writer.newLine();
             }
