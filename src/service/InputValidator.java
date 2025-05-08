@@ -11,7 +11,7 @@ public class InputValidator {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
 	public boolean validateUsername(String username) {
-		return username != null && username.matches("^[a-zA-Z0-9]{3,20}$");
+		return username != null && username.matches("^(?=.*[a-zA-Z])[a-zA-Z0-9 ]{3,50}$");
 	}
 
 	public boolean validatePassword(String password) {
