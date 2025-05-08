@@ -1,5 +1,3 @@
-/controller/
-/entity/
-/repository/
 /service/
-/reports/
+/controller/
+/repository/

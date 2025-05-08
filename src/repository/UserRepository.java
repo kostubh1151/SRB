@@ -19,6 +19,10 @@ public class UserRepository {
 		return users.values().stream().filter(user -> user.getUsername().equals(username)).findFirst().orElse(null);
 	}
 
+	public void deleteByUsername(String username) {
+		users.values().removeIf(user -> user.getUsername().equals(username));
+	}
+
 	public Map<String, User> findAll() {
 		return new HashMap<>(users);
 	}
