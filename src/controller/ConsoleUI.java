@@ -338,8 +338,15 @@ public class ConsoleUI {
 			return;
 		}
 		try {
+			
+			if(resourceService.getResource(id).isAvailable())
+			{
 			resourceService.updateResource(id, newName, newType, newCost);
 			System.out.println("Resource updated successfully!");
+			}
+			else {
+				System.out.println("Resource is already booked So it cannot be updated");
+			}
 		} catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -348,9 +355,15 @@ public class ConsoleUI {
 	private void deleteResource() {
 		System.out.print("Enter resource ID: ");
 		String deleteId = scanner.nextLine();
+		
 		try {
+			if(resourceService.getResource(deleteId).isAvailable())
+			{
 			resourceService.deleteResource(deleteId);
 			System.out.println("Resource deleted successfully!");
+			return;
+			}
+			System.out.println("Resource is booked by users ");
 		} catch (IllegalArgumentException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
