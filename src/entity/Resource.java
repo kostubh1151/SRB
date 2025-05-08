@@ -14,6 +14,16 @@ public class Resource {
 		this.costPerHour = costPerHour;
 		this.isAvailable = true;
 	}
+	@Override
+	public String toString() {
+		return "Resource{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", type='" + type + '\'' +
+				", costPerHour=" + costPerHour +
+				", isAvailable=" + isAvailable +
+				'}';
+	}
 
 	public String getId() {
 		return id;

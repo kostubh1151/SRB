@@ -66,18 +66,18 @@ public class ConsoleUI {
 			int choice = scanner.nextInt();
 			scanner.nextLine();
 			switch (choice) {
-			case 1:
-				handleLogin();
-				break;
-			case 2:
-				handleRegister();
-				break;
-			case 3:
-				System.out.println("Exiting...");
-				System.exit(0);
-				break;
-			default:
-				System.out.println("Invalid option!");
+				case 1:
+					handleLogin();
+					break;
+				case 2:
+					handleRegister();
+					break;
+				case 3:
+					System.out.println("Exiting...");
+					System.exit(0);
+					break;
+				default:
+					System.out.println("Invalid option!");
 			}
 		} catch (Exception e) {
 			System.out.println("Invalid input! Please enter a number.");
@@ -152,38 +152,42 @@ public class ConsoleUI {
 			System.out.println("4. View User");
 			System.out.println("5. View Reports");
 			System.out.println("6. generate Report of Bookings");
-			System.out.println("7. Log Out");
+			System.out.println("7. generate Report of Resources");
+			System.out.println("8. Log Out");
 
 			try {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-				case 1:
-					browseResources();
-					break;
-				case 2:
-					handleRegister();
-					break;
-				case 3:
-					removeUser();
-					break;
-				case 4:
-					viewUser();
-					break;
-				case 5:
-					viewReports();
-					break;
-				case 6:
-					generateReport();
-					break;
-				case 7:
-					currentUser = null;
-					cart.clear();
-					System.out.println("Logged out successfully!");
-					break;
-				
-				default:
-					System.out.println("Invalid option");
+					case 1:
+						browseResources();
+						break;
+					case 2:
+						handleRegister();
+						break;
+					case 3:
+						removeUser();
+						break;
+					case 4:
+						viewUser();
+						break;
+					case 5:
+						viewReports();
+						break;
+					case 6:
+						generateReport();
+						break;
+					case 7:
+						generateReportForResources();
+						break;
+					case 8:
+						currentUser = null;
+						cart.clear();
+						System.out.println("Logged out successfully!");
+						break;
+
+					default:
+						System.out.println("Invalid option");
 				}
 
 			} catch (Exception e) {
@@ -204,25 +208,25 @@ public class ConsoleUI {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-				case 1:
-					addResource();
-					break;
-				case 2:
-					updateResource();
-					break;
-				case 3:
-					deleteResource();
-					break;
-				case 4:
-					browseResources();
-					break;
-				case 5:
-					currentUser = null;
-					cart.clear();
-					System.out.println("Logged out successfully!");
-					break;
-				default:
-					System.out.println("Invalid option");
+					case 1:
+						addResource();
+						break;
+					case 2:
+						updateResource();
+						break;
+					case 3:
+						deleteResource();
+						break;
+					case 4:
+						browseResources();
+						break;
+					case 5:
+						currentUser = null;
+						cart.clear();
+						System.out.println("Logged out successfully!");
+						break;
+					default:
+						System.out.println("Invalid option");
 				}
 
 			} catch (Exception e) {
@@ -247,37 +251,37 @@ public class ConsoleUI {
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (choice) {
-				case 1:
-					browseResources();
-					break;
-				case 2:
-					addToCart();
-					break;
-				case 3:
-					confirmBooking();
-					break;
-				case 4:
-					viewReports();
-					break;
-				case 5:
-					cancelBooking();
-					break;
-				case 6:
-					viewCart();
-					break;
-				case 7:
-					removeFromCart();
-					break;
-				case 8:
-					cart.clear();
-					break;
-				case 9:
-					currentUser = null;
-//					cart.clear();
-					System.out.println("Logged out successfully!");
-					break;
-				default:
-					System.out.println("Invalid option!");
+					case 1:
+						browseResources();
+						break;
+					case 2:
+						addToCart();
+						break;
+					case 3:
+						confirmBooking();
+						break;
+					case 4:
+						viewReports();
+						break;
+					case 5:
+						cancelBooking();
+						break;
+					case 6:
+						viewCart();
+						break;
+					case 7:
+						removeFromCart();
+						break;
+					case 8:
+						cart.clear();
+						break;
+					case 9:
+						currentUser = null;
+						// cart.clear();
+						System.out.println("Logged out successfully!");
+						break;
+					default:
+						System.out.println("Invalid option!");
 				}
 			} catch (Exception e) {
 				System.out.println("Invalid input! Please enter a number.");
@@ -285,11 +289,17 @@ public class ConsoleUI {
 			}
 		}
 	}
-	
+
 	private void generateReport() {
-		String filePath="D:\\SRBMS\\SRB\\src\\reports\\reports.txt";
+		String filePath = "src\\reports\\reports.txt";
 		reportService.writeListToFile(bookingService.bookingRepository.findAll(), filePath);
-		
+
+	}
+
+	private void generateReportForResources() {
+		String filePath = "src\\reports\\Resourcereports.txt";
+		reportService.writeListToFile(resourceService.getAllResources().values().stream().toList(), filePath);
+
 	}
 
 	private void viewUser() {
@@ -349,13 +359,11 @@ public class ConsoleUI {
 			return;
 		}
 		try {
-			
-			if(resourceService.getResource(id).isAvailable())
-			{
-			resourceService.updateResource(id, newName, newType, newCost);
-			System.out.println("Resource updated successfully!");
-			}
-			else {
+
+			if (resourceService.getResource(id).isAvailable()) {
+				resourceService.updateResource(id, newName, newType, newCost);
+				System.out.println("Resource updated successfully!");
+			} else {
 				System.out.println("Resource is already booked So it cannot be updated");
 			}
 		} catch (IllegalArgumentException e) {
@@ -366,13 +374,12 @@ public class ConsoleUI {
 	private void deleteResource() {
 		System.out.print("Enter resource ID: ");
 		String deleteId = scanner.nextLine();
-		
+
 		try {
-			if(resourceService.getResource(deleteId).isAvailable())
-			{
-			resourceService.deleteResource(deleteId);
-			System.out.println("Resource deleted successfully!");
-			return;
+			if (resourceService.getResource(deleteId).isAvailable()) {
+				resourceService.deleteResource(deleteId);
+				System.out.println("Resource deleted successfully!");
+				return;
 			}
 			System.out.println("Resource is booked by users ");
 		} catch (IllegalArgumentException e) {
